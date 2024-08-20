@@ -8,6 +8,8 @@ import { Cliente } from './clientes/entities/cliente.entity';
 import { Address } from './address/entities/address.entity';
 import { DependentsModule } from './dependents/dependents.module';
 import { Dependent } from './dependents/entities/dependent.entity';
+import { TelephonesModule } from './telephone/telephone.module';
+import { Telephone } from './telephone/entities/telephone.entity';
 
 @Module({
   imports: [
@@ -21,11 +23,12 @@ import { Dependent } from './dependents/entities/dependent.entity';
       username: 'root',
       password: '1234',
       database: 'clientes',
-      entities: [Cliente, Address, Dependent
+      entities: [Cliente, Address, Dependent, Telephone
       ],
       synchronize: true,
     }),
     DependentsModule,
+    TelephonesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
