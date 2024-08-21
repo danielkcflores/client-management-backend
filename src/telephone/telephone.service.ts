@@ -18,11 +18,25 @@ export class TelephonesService {
   }
 
 
-  findByClientId(clientId: number): Promise<Telephone[]> {
-    return this.telephonesRepository.find({
-      where: { cliente: { id: clientId } },
-      relations: ['cliente'],
-    });
+  async findByClientId(clientId: number): Promise<Telephone[]> {
+    try {
+      if (!clientId) {
+        throw new Error('Client ID is required');
+      }
+
+      const client: Cliente = await this.clientesService.findOne(clientId);
+
+      if (!client) {
+        throw new Error(`Client with ID ${clientId} not found`);
+      }
+
+      return this.telephonesRepository.find({
+        where: { cliente: { id: clientId } },
+        relations: ['cliente'],
+      });
+    } catch (error) {
+      throw new Error(`Failed to find telephones for client with ID ${clientId}: ${error.message}`);
+    }
   }
 
   searchByClientId(clientId: number, searchText: string): Promise<Telephone[]> {

@@ -14,8 +14,12 @@ export class DependentController {
     return res.status(HttpStatus.OK).json(dependents);
   }
 
-  @Get('search')
-  async search(@Param('clientId') clientId: number, @Query('searchText') searchText: string, @Res() res): Promise<Dependent[]> {
+  @Get('/:clientId/search')
+  async search(
+    @Param('clientId') clientId: number,
+    @Query('searchText') searchText: string,
+    @Res() res
+  ): Promise<Dependent[]> {
     const dependents = await this.dependentsService.searchByClientId(clientId, searchText);
     return res.status(HttpStatus.OK).json(dependents);
   }
