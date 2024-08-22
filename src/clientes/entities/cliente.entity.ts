@@ -21,6 +21,6 @@ export class Cliente {
   dependentes: Dependent[];
 
   @OneToMany(() => Telephone, telephone => telephone.cliente, { cascade: true })
-  telefones: Dependent[];
+  telefones: Telephone[];
 }
 

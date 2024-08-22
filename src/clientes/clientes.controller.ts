@@ -51,4 +51,9 @@ export class ClientesController {
   async excluir(@Param('cpf') cpf: string): Promise<ResultadoDto> {
     return this.clientesService.excluir(cpf);
   }
+
+  @Get('report')
+  async getClientsReport() {
+    return this.clientesService.getClientsWithRelations();
+  }
 }

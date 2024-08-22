@@ -83,5 +83,14 @@ export class ClientesService {
       console.log(`Cliente with ID ${id} not found`);
     }
     return cliente;
+  }
+
+  async getClientsWithRelations() {
+    return await this.clientesRepository
+      .createQueryBuilder("clientes")
+      .leftJoinAndSelect("clientes.enderecos", "enderecos")
+      .leftJoinAndSelect("clientes.dependentes", "dependentes")
+      .leftJoinAndSelect("clientes.telefones", "telefones")
+      .getMany();
   }  
 }
