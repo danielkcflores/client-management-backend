@@ -10,6 +10,10 @@ import { DependentsModule } from './dependents/dependents.module';
 import { Dependent } from './dependents/entities/dependent.entity';
 import { TelephonesModule } from './telephone/telephone.module';
 import { Telephone } from './telephone/entities/telephone.entity';
+import { ProductsModule } from './products/products.module';
+import { Product } from './products/entities/product.entity';
+import { PurchaseModule } from './purchases/purchases.module';
+import { Purchase } from './purchases/entities/purchase.entity';
 
 @Module({
   imports: [
@@ -23,12 +27,15 @@ import { Telephone } from './telephone/entities/telephone.entity';
       username: 'root',
       password: '1234',
       database: 'clientes',
-      entities: [Cliente, Address, Dependent, Telephone
+      entities: [Cliente, Address, Dependent, Telephone, Product, Purchase
       ],
-      synchronize: true,
+      synchronize: false,
     }),
+    AddressModule,
     DependentsModule,
     TelephonesModule,
+    ProductsModule,
+    PurchaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

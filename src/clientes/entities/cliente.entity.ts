@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Address } from '../../address/entities/address.entity';
 import { Dependent } from 'src/dependents/entities/dependent.entity';
 import { Telephone } from 'src/telephone/entities/telephone.entity';
+import { Purchase } from 'src/purchases/entities/purchase.entity';
 
 @Entity('clientes')
 export class Cliente {
@@ -22,5 +23,8 @@ export class Cliente {
 
   @OneToMany(() => Telephone, telephone => telephone.cliente, { cascade: true })
   telefones: Telephone[];
+
+  @OneToMany(() => Purchase, purchase => purchase.cliente)
+  purchases: Purchase[];
 }
 
