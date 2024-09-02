@@ -5,7 +5,7 @@ import { DatabaseModule } from '../database/database.module';
 import { dependentProviders } from './dependents.providers';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Dependent } from './entities/dependent.entity';
-import { ClientesModule } from 'src/clientes/clientes.module';
+import { ClientesModule } from 'src/clients/clients.module';
 
 @Module({
   imports: [DatabaseModule,

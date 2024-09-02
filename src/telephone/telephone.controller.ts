@@ -59,4 +59,14 @@ export class TelephoneController {
     await this.telephonesService.remove(id);
     return res.status(HttpStatus.NO_CONTENT).send();
   }
+
+  @Get('/:clientId/check-telephone')
+  async checkTelephone(
+    @Param('clientId') clientId: number,
+    @Query('number') number: string,
+    @Res() res
+  ): Promise<any> {
+    const isRegistered = await this.telephonesService.isTelephoneRegistered(clientId, number);
+    return res.status(HttpStatus.OK).json({ isRegistered });
+  }
 }

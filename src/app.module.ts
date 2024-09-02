@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ClientesModule } from './clientes/clientes.module';
+import { ClientesModule } from './clients/clients.module';
 import { AddressModule } from './address/address.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Cliente } from './clientes/entities/cliente.entity';
+import { Cliente } from './clients/entities/client.entity';
 import { Address } from './address/entities/address.entity';
 import { DependentsModule } from './dependents/dependents.module';
 import { Dependent } from './dependents/entities/dependent.entity';

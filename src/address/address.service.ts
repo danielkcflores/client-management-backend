@@ -3,8 +3,8 @@ import { Like, Repository } from 'typeorm';
 import { Address } from './entities/address.entity';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
-import { Cliente } from 'src/clientes/entities/cliente.entity';
-import { ClientesService } from 'src/clientes/clientes.service';
+import { Cliente } from 'src/clients/entities/client.entity';
+import { ClientesService } from 'src/clients/clients.service';
 
 @Injectable()
 export class AddressesService {

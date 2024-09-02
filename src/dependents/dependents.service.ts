@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Like, Repository } from 'typeorm';
-import { Cliente } from 'src/clientes/entities/cliente.entity';
-import { ClientesService } from 'src/clientes/clientes.service';
+import { Cliente } from 'src/clients/entities/client.entity';
+import { ClientesService } from 'src/clients/clients.service';
 import { Dependent } from './entities/dependent.entity';
 import { CreateDependentDto } from './dto/create-dependent.dto';
 import { UpdateDependentDto } from './dto/update-dependent.dto';

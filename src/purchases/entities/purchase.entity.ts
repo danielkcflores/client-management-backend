@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Cliente } from 'src/clientes/entities/cliente.entity';
+import { Cliente } from 'src/clients/entities/client.entity';
 import { Product } from 'src/products/entities/product.entity';
 
 @Entity('purchase_order')

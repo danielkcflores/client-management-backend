@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Like, Repository } from 'typeorm';
-import { Cliente } from './entities/cliente.entity';
-import { CreateClienteDto } from './dto/create-cliente.dto';
+import { Cliente } from './entities/client.entity';
+import { CreateClienteDto } from './dto/create-client.dto';
 import { ResultadoDto } from 'src/dto/resultado.dto';
-import { UpdateClienteDto } from './dto/update-cliente.dto';
+import { UpdateClienteDto } from './dto/update-client.dto';
 
 @Injectable()
 export class ClientesService {
@@ -77,6 +77,7 @@ export class ClientesService {
       return { status: false, mensagem: 'Erro ao excluir cliente' };
     }
   }
+  
   async findOne(id: number): Promise<Cliente> {
     const cliente = await this.clientesRepository.findOne({ where: { id } });
     if (!cliente) {

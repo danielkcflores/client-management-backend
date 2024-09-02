@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Like, Repository } from 'typeorm';
-import { Cliente } from 'src/clientes/entities/cliente.entity';
-import { ClientesService } from 'src/clientes/clientes.service';
+import { Cliente } from 'src/clients/entities/client.entity';
+import { ClientesService } from 'src/clients/clients.service';
 import { Telephone } from './entities/telephone.entity';
 import { CreateTelephoneDto } from './dto/create-telephone.dto';
 import { UpdateTelephoneDto } from './dto/update-telephone.dto';
@@ -17,6 +17,15 @@ export class TelephonesService {
     console.log('Connected to the database');
   }
 
+  // Função para verificar se o telefone já está cadastrado para o cliente
+  async isTelephoneRegistered(clientId: number, number: string): Promise<boolean> {
+    return !!await this.telephonesRepository.findOne({
+      where: {
+        cliente: { id: clientId },
+        numero: number
+      }
+    });
+  }
 
   async findByClientId(clientId: number): Promise<Telephone[]> {
     try {
@@ -54,6 +63,10 @@ export class TelephonesService {
   
     if (!cliente) {
       throw new Error(`Cliente with ID ${createTelephoneDto.clientId} not found`);
+    }
+
+    if (await this.isTelephoneRegistered(createTelephoneDto.clientId, createTelephoneDto.numero)) {
+      throw new Error(`O telefone ${createTelephoneDto.numero} já está cadastrado para o cliente com ID ${createTelephoneDto.clientId}`);
     }
   
     const telephone: Telephone = this.telephonesRepository.create(createTelephoneDto);

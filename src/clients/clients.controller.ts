@@ -8,11 +8,11 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ClientesService } from './clientes.service';
-import { Cliente } from './entities/cliente.entity';
+import { ClientesService } from './clients.service';
+import { Cliente } from './entities/client.entity';
 import { ResultadoDto } from 'src/dto/resultado.dto';
-import { CreateClienteDto } from './dto/create-cliente.dto';
-import { UpdateClienteDto } from './dto/update-cliente.dto';
+import { CreateClienteDto } from './dto/create-client.dto';
+import { UpdateClienteDto } from './dto/update-client.dto';
 
 @Controller('clientes')
 export class ClientesController {

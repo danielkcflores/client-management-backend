@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Purchase } from './entities/purchase.entity';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
-import { Cliente } from 'src/clientes/entities/cliente.entity';
+import { Cliente } from 'src/clients/entities/client.entity';
 import { Product } from 'src/products/entities/product.entity';
 
 @Injectable()
