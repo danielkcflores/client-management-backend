@@ -4,12 +4,15 @@ import { Cliente } from './entities/client.entity';
 import { CreateClienteDto } from './dto/create-client.dto';
 import { ResultadoDto } from 'src/dto/resultado.dto';
 import { UpdateClienteDto } from './dto/update-client.dto';
+import { Purchase } from 'src/purchases/entities/purchase.entity';
 
 @Injectable()
 export class ClientesService {
   constructor(
     @Inject('CLIENTES_REPOSITORY')
     private clientesRepository: Repository<Cliente>,
+    @Inject('PURCHASE_REPOSITORY') // Injeção do repositório de compras
+    private purchaseRepository: Repository<Purchase>,
   ) {}
 
   async findAll(): Promise<Cliente[]> {
@@ -64,19 +67,26 @@ export class ClientesService {
     }
   }
 
-  async excluir(cpf: string): Promise<ResultadoDto> {
-    try {
-      const cliente = await this.clientesRepository.findOne({ where: { cpf } });
-      if (!cliente) {
-        return { status: false, mensagem: 'Cliente não encontrado' };
-      }
+  
 
-      await this.clientesRepository.remove(cliente);
-      return { status: true, mensagem: 'Cliente excluído com sucesso' };
-    } catch (error) {
-      return { status: false, mensagem: 'Erro ao excluir cliente' };
+  async excluir(cpf: string): Promise<ResultadoDto> {
+    const cliente = await this.clientesRepository.findOne({ where: { cpf } });
+    if (!cliente) {
+      return { status: false, mensagem: 'Cliente não encontrado' };
     }
+  
+    // Verifica se há compras associadas ao cliente
+    const purchases = await this.purchaseRepository.find({ where: { cliente: { id: cliente.id } } });
+    if (purchases.length > 0) {
+      return { status: false, mensagem: 'Não é possível excluir o cliente, pois há compras associadas.' };
+    }
+  
+    await this.clientesRepository.remove(cliente);
+    return { status: true, mensagem: 'Cliente excluído com sucesso' };
   }
+  
+
+  
   
   async findOne(id: number): Promise<Cliente> {
     const cliente = await this.clientesRepository.findOne({ where: { id } });

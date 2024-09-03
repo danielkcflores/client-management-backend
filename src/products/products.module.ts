@@ -5,12 +5,13 @@ import { DatabaseModule } from 'src/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { productProviders } from './products.providers';
 import { Product } from './entities/product.entity';
-import { ClientesModule } from 'src/clients/clients.module';
+import { PurchaseModule } from 'src/purchases/purchases.module';  // Importar o módulo de compras
 
 @Module({
-  imports: [DatabaseModule,
+  imports: [
+    DatabaseModule,
     TypeOrmModule.forFeature([Product]),
-    ClientesModule,
+    PurchaseModule,  // Adicione PurchaseModule aqui
   ],
   controllers: [ProductsController],
   providers: [...productProviders, ProductsService],

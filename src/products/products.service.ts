@@ -4,12 +4,15 @@ import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ResultadoDto } from 'src/dto/resultado.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Purchase } from 'src/purchases/entities/purchase.entity';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @Inject('PRODUCT_REPOSITORY')
     private productsRepository: Repository<Product>,
+    @Inject('PURCHASE_REPOSITORY') // Injeção do repositório de compras
+    private purchaseRepository: Repository<Purchase>,
   ) {}
 
   async findAll(): Promise<Product[]> {
@@ -68,16 +71,18 @@ export class ProductsService {
   }
 
   async excluir(id: number): Promise<ResultadoDto> {
-    try {
-      const product = await this.productsRepository.findOne({ where: { id } });
-      if (!product) {
-        return { status: false, mensagem: 'Produto não encontrado' };
-      }
-
-      await this.productsRepository.remove(product);
-      return { status: true, mensagem: 'Produto excluído com sucesso' };
-    } catch (error) {
-      return { status: false, mensagem: 'Erro ao excluir produto' };
+    const product = await this.productsRepository.findOne({ where: { id } });
+    if (!product) {
+      return { status: false, mensagem: 'Produto não encontrado' };
     }
+
+    // Verifica se há compras associadas ao produto
+    const purchases = await this.purchaseRepository.find({ where: { product: { id: product.id } } });
+    if (purchases.length > 0) {
+      return { status: false, mensagem: 'Não é possível excluir o produto, pois há compras associadas.' };
+    }
+
+    await this.productsRepository.remove(product);
+    return { status: true, mensagem: 'Produto excluído com sucesso' };
   }
 }
