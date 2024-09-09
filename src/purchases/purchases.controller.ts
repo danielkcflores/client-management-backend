@@ -9,7 +9,7 @@ export class PurchaseController {
 
   @Post()
   async createPurchase(@Body() createPurchaseDto: CreatePurchaseDto) {
-    console.log('Data received:', createPurchaseDto);  // Adicione este log
+    console.log('Data received:', createPurchaseDto);
     return this.purchaseService.createPurchase(createPurchaseDto);
   }
 
