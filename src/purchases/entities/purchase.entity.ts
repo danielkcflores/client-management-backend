@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Cliente } from 'src/clients/entities/client.entity';
-import { Product } from 'src/products/entities/product.entity';
+import { OrderProduct } from 'src/order_product/entities/order_product.entity';
 
 @Entity('purchase_order')
 export class Purchase {
@@ -10,6 +10,6 @@ export class Purchase {
   @ManyToOne(() => Cliente, cliente => cliente.purchases, { eager: true })
   cliente: Cliente;
 
-  @ManyToOne(() => Product, product => product.purchases, { eager: true })
-  product: Product;
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.purchase)
+  orderProducts: OrderProduct[];
 }

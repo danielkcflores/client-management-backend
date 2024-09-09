@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PurchaseService } from './purchases.service';
-import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { Purchase } from './entities/purchase.entity';
+import { CreatePurchaseDto } from './dto/create-purchase.dto';
 
 @Controller('purchases')
 export class PurchaseController {
   constructor(private readonly purchaseService: PurchaseService) {}
 
-  @Post('cadastrar')
-  async create(@Body() createPurchaseDto: CreatePurchaseDto): Promise<Purchase> {
-    return this.purchaseService.create(createPurchaseDto);
+  @Post()
+  async createPurchase(@Body() createPurchaseDto: CreatePurchaseDto) {
+    console.log('Data received:', createPurchaseDto);  // Adicione este log
+    return this.purchaseService.createPurchase(createPurchaseDto);
   }
 
   @Get('relatorio')
@@ -18,7 +19,7 @@ export class PurchaseController {
   }
 
   @Get('buscar')
-async search(@Query('searchText') searchText: string): Promise<Purchase[]> {
-  return this.purchaseService.search(searchText);
-}
+  async search(@Query('searchText') searchText: string): Promise<Purchase[]> {
+    return this.purchaseService.search(searchText);
+  }
 }

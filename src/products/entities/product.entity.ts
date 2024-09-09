@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Purchase } from 'src/purchases/entities/purchase.entity';
+import { OrderProduct } from 'src/order_product/entities/order_product.entity';
 
 @Entity()
 export class Product {
@@ -12,6 +12,6 @@ export class Product {
   @Column('decimal', { precision: 10, scale: 2 }) // Garantindo precisão decimal
   price: number;
 
-  @OneToMany(() => Purchase, purchase => purchase.product)
-  purchases: Purchase[];
+  @OneToMany(() => OrderProduct, orderProduct => orderProduct.product)
+  orderProducts: OrderProduct[];
 }

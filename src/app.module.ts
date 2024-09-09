@@ -14,6 +14,8 @@ import { ProductsModule } from './products/products.module';
 import { Product } from './products/entities/product.entity';
 import { PurchaseModule } from './purchases/purchases.module';
 import { Purchase } from './purchases/entities/purchase.entity';
+import { OrderProduct } from './order_product/entities/order_product.entity';
+import { OrderProductModule } from './order_product/order_product.module';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { Purchase } from './purchases/entities/purchase.entity';
       username: 'root',
       password: '1234',
       database: 'clientes',
-      entities: [Cliente, Address, Dependent, Telephone, Product, Purchase
+      entities: [Cliente, Address, Dependent, Telephone, Product, Purchase, OrderProduct
       ],
       synchronize: false,
     }),
@@ -36,6 +38,8 @@ import { Purchase } from './purchases/entities/purchase.entity';
     TelephonesModule,
     ProductsModule,
     PurchaseModule,
+    OrderProduct,
+    OrderProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Purchase } from './entities/purchase.entity';
-import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { Cliente } from 'src/clients/entities/client.entity';
+import { OrderProduct } from 'src/order_product/entities/order_product.entity';
 import { Product } from 'src/products/entities/product.entity';
+import { CreatePurchaseDto } from './dto/create-purchase.dto';
 
 @Injectable()
 export class PurchaseService {
@@ -15,34 +16,60 @@ export class PurchaseService {
     private clienteRepository: Repository<Cliente>,
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    @InjectRepository(OrderProduct)
+    private orderProductRepository: Repository<OrderProduct>,
   ) {}
+  
+  async createPurchase(createPurchaseDto: CreatePurchaseDto): Promise<Purchase> {
+    const { clienteId, products } = createPurchaseDto;
 
-  async create(createPurchaseDto: CreatePurchaseDto): Promise<Purchase> {
-    const { clienteId, productId } = createPurchaseDto;
-    const cliente = await this.clienteRepository.findOne({ where: { id: clienteId } });
-    const product = await this.productRepository.findOne({ where: { id: productId } });
+    // 1. Crie a compra (purchase)
+    const purchase = new Purchase();
+    purchase.cliente = await this.clienteRepository.findOne({ where: { id: clienteId } });
+    await this.purchaseRepository.save(purchase);
 
-    if (!cliente || !product) {
-      throw new Error('Invalid cliente or product ID');
+    // 2. Itere sobre os produtos e crie entries na order_product
+    for (const productDto of products) {
+        const product = await this.productRepository.findOne({ where: { id: productDto.productId } });
+
+        if (!product) {
+            throw new NotFoundException(`Produto com ID ${productDto.productId} não encontrado`);
+        }
+
+        // 3. Calcule o total (preço unitário * quantidade)
+        const totalPrice = product.price * productDto.quantity;
+
+        // 4. Crie a entrada na order_product
+        const orderProduct = new OrderProduct();
+        orderProduct.purchase = purchase;
+        orderProduct.product = product;
+        orderProduct.quantity = productDto.quantity;
+        orderProduct.productPrice = product.price; // Salva o preço unitário
+        orderProduct.totalPrice = totalPrice; // Salva o total calculado
+
+        await this.orderProductRepository.save(orderProduct);
     }
 
-    const purchase = new Purchase();
-    purchase.cliente = cliente;
-    purchase.product = product;
-
-    return this.purchaseRepository.save(purchase);
-  }
+    return purchase;
+}  
 
   async findAllWithDetails(): Promise<Purchase[]> {
     return this.purchaseRepository
       .createQueryBuilder('purchase')
       .innerJoinAndSelect('purchase.cliente', 'cliente')
-      .innerJoinAndSelect('purchase.product', 'product')
+      .leftJoinAndSelect('purchase.orderProducts', 'orderProduct')
+      .leftJoinAndSelect('orderProduct.product', 'product')
       .select([
         'purchase.id',
+        'purchase.quantity',
         'cliente.id',
         'cliente.name',
         'cliente.cpf',
+        'orderProduct.id',
+        'orderProduct.quantity',
+        'orderProduct.productPrice',
+        'orderProduct.totalPrice',
+        'orderProduct.createdAt',
         'product.id',
         'product.name',
         'product.price',
@@ -54,7 +81,8 @@ export class PurchaseService {
     return this.purchaseRepository
       .createQueryBuilder('purchase')
       .innerJoinAndSelect('purchase.cliente', 'cliente')
-      .innerJoinAndSelect('purchase.product', 'product')
+      .leftJoinAndSelect('purchase.orderProducts', 'orderProduct')
+      .leftJoinAndSelect('orderProduct.product', 'product')
       .where('purchase.id LIKE :searchText', { searchText: `%${searchText}%` })
       .orWhere('cliente.name LIKE :searchText', { searchText: `%${searchText}%` })
       .orWhere('cliente.cpf LIKE :searchText', { searchText: `%${searchText}%` })
@@ -64,11 +92,14 @@ export class PurchaseService {
         'cliente.id',
         'cliente.name',
         'cliente.cpf',
+        'orderProduct.id',
+        'orderProduct.quantity',
+        'orderProduct.productPrice',
+        'orderProduct.totalPrice',
+        'orderProduct.createdAt',
         'product.id',
         'product.name',
-        'product.price',
       ])
       .getMany();
   }
-  
 }

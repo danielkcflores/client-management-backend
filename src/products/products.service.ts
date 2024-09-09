@@ -4,15 +4,15 @@ import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ResultadoDto } from 'src/dto/resultado.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Purchase } from 'src/purchases/entities/purchase.entity';
+import { OrderProduct } from 'src/order_product/entities/order_product.entity';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @Inject('PRODUCT_REPOSITORY')
     private productsRepository: Repository<Product>,
-    @Inject('PURCHASE_REPOSITORY') // Injeção do repositório de compras
-    private purchaseRepository: Repository<Purchase>,
+    @Inject('ORDER_PRODUCT_REPOSITORY') // Injeção do repositório de compras
+    private orderProductRepository: Repository<OrderProduct>,
   ) {}
 
   async findAll(): Promise<Product[]> {
@@ -63,7 +63,7 @@ export class ProductsService {
         return { status: false, mensagem: 'Produto não encontrado' };
       }
 
-      await this.productsRepository.update(product, data);
+      await this.productsRepository.update({ id }, data);
       return { status: true, mensagem: 'Produto alterado com sucesso' };
     } catch (error) {
       return { status: false, mensagem: 'Erro ao alterar produto' };
@@ -75,13 +75,17 @@ export class ProductsService {
     if (!product) {
       return { status: false, mensagem: 'Produto não encontrado' };
     }
-
-    // Verifica se há compras associadas ao produto
-    const purchases = await this.purchaseRepository.find({ where: { product: { id: product.id } } });
-    if (purchases.length > 0) {
+  
+    // Verifica se há compras associadas ao produto na tabela intermediária OrderProduct
+    const orderProducts = await this.orderProductRepository.find({
+      where: { product: { id: product.id } },
+    });
+    
+    if (orderProducts.length > 0) {
       return { status: false, mensagem: 'Não é possível excluir o produto, pois há compras associadas.' };
     }
-
+    
+  
     await this.productsRepository.remove(product);
     return { status: true, mensagem: 'Produto excluído com sucesso' };
   }
