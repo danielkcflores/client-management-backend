@@ -1,6 +1,6 @@
 import { Product } from 'src/products/entities/product.entity';
 import { Purchase } from 'src/purchases/entities/purchase.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class OrderProduct {
@@ -15,9 +15,6 @@ export class OrderProduct {
 
     @Column()
     quantity: number;
-
-    @CreateDateColumn({ type: 'timestamp' }) // Data de criação da compra
-    createdAt: Date;
 
     @Column('decimal', { precision: 10, scale: 2 })
     productPrice: number; // Preço unitário do produto

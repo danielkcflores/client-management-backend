@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, CreateDateColumn } from 'typeorm';
 import { Cliente } from 'src/clients/entities/client.entity';
 import { OrderProduct } from 'src/order_product/entities/order_product.entity';
 
@@ -6,6 +6,9 @@ import { OrderProduct } from 'src/order_product/entities/order_product.entity';
 export class Purchase {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @CreateDateColumn({ type: 'timestamp' }) // Data de criação da compra
+    createdAt: Date;
 
   @ManyToOne(() => Cliente, cliente => cliente.purchases, { eager: true })
   cliente: Cliente;

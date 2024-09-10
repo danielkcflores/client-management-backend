@@ -62,6 +62,7 @@ export class PurchaseService {
       .select([
         'purchase.id',
         'purchase.quantity',
+        'purchase.createdAt',
         'cliente.id',
         'cliente.name',
         'cliente.cpf',
@@ -69,7 +70,6 @@ export class PurchaseService {
         'orderProduct.quantity',
         'orderProduct.productPrice',
         'orderProduct.totalPrice',
-        'orderProduct.createdAt',
         'product.id',
         'product.name',
         'product.price',
@@ -89,6 +89,7 @@ export class PurchaseService {
       .orWhere('product.name LIKE :searchText', { searchText: `%${searchText}%` })
       .select([
         'purchase.id',
+        'purchase.createdAt',
         'cliente.id',
         'cliente.name',
         'cliente.cpf',
@@ -96,7 +97,6 @@ export class PurchaseService {
         'orderProduct.quantity',
         'orderProduct.productPrice',
         'orderProduct.totalPrice',
-        'orderProduct.createdAt',
         'product.id',
         'product.name',
       ])
